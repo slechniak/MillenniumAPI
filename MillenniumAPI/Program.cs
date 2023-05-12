@@ -3,7 +3,7 @@ using MillenniumAPI.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddScoped<IWeatherForecastRepository, MockWeatherForecastRepository>();
+builder.Services.AddSingleton<IWeatherForecastRepository, MockWeatherForecastRepository>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

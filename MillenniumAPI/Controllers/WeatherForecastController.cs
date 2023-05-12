@@ -7,28 +7,48 @@ namespace MillenniumAPI.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
+        //private static readonly string[] Summaries = new[]
+        //{
+        //"Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+        //};
 
         private readonly ILogger<WeatherForecastController> _logger;
+        private IWeatherForecastRepository _weatherForecastRepository;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IWeatherForecastRepository weatherForecastRepository)
         {
             _logger = logger;
+            _weatherForecastRepository = weatherForecastRepository;
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+            return _weatherForecastRepository.GetAllWeatherForecasts();
+        }
+
+        [HttpGet("{id}")]
+        public WeatherForecast Get(int id)
+        {
+            return _weatherForecastRepository.GetWeatherForecast(id);
+        }
+
+        [HttpPut]
+        public WeatherForecast Create(WeatherForecast weatherForecast)
+        {
+            return _weatherForecastRepository.Add(weatherForecast);
+        }
+
+        [HttpPatch]
+        public WeatherForecast Update(WeatherForecast weatherForecastChanges)
+        {
+            return _weatherForecastRepository.Update(weatherForecastChanges);
+        }
+
+        [HttpDelete("{id}")]
+        public WeatherForecast Delete(int id)
+        {
+            return _weatherForecastRepository.Delete(id);
         }
     }
 }
